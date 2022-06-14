@@ -23,3 +23,8 @@ class LicencePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Li_Model
         fields = ['seller_email', 'S_no']
+
+class ExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Li_Model
+        fields = ['seller_email']

@@ -5,7 +5,7 @@ import random
 import csv
 from django.http import HttpResponse
 from .encryption_util import *
-from .serializer import LicencePostSerializer, LicenceGetSerializer, SellerSerializer
+from .serializer import LicencePostSerializer, LicenceGetSerializer, SellerSerializer, ExportSerializer
 from rest_framework import status 
 from rest_framework.decorators import api_view 
 from rest_framework.response import Response 
@@ -133,13 +133,21 @@ class generate_licence(APIView):
         else:
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-def exportcsv(request):
-    students = Li_Model.objects.all()
-    response = HttpResponse('text/csv')
-    response['Content-Disposition'] = 'attachment; filename=final.csv'
-    writer = csv.writer(response)
-    writer.writerow(['licence_no'])
-    studs = students.values_list('licence_no')
-    for std in studs:
-        writer.writerow(std)
-    return response
+class exportcsv(APIView):
+    serializer_class = ExportSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            s_data = Seller_detail.objects.get(id= request.data['seller_email'])
+            seller = Li_Model.objects.filter(seller_email= s_data)
+            response = HttpResponse()
+            response['Content-Disposition'] = 'attachment; filename=final.csv'
+            writer = csv.writer(response)
+            writer.writerow(['Seller Name', 'Licence No'])
+            studs = seller.values_list('seller_email', 'licence_no')
+            for std in studs:
+                writer.writerow(std)
+            return response
+            # return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
