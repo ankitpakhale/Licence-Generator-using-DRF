@@ -33,6 +33,81 @@ class create_seller(APIView):
         else:
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class All_create_seller(APIView):
+    # serializer_class=SellerSerializer
+    def get(self,request,id=None,format=None):
+        if id is not None:
+            try:
+                s=Seller_detail.objects.get(id=id)
+                s=SellerSerializer(s)
+            except:
+                msg={"msg":"id does not exists"}
+                return Response(msg)    
+        else:
+            s=Seller_detail.objects.all()
+            s=SellerSerializer(s,many=True)
+        
+        return Response(s.data)
+
+
+    def post(self,request,format=None):        
+        s=SellerSerializer(data=request.data)
+        print(s)
+        if s.is_valid():
+            s.save()
+            msg={'msg':'data saved into db'}
+            return Response(msg)
+        return Response(s.error_messages)    
+
+
+    def put(self,request,id=None,format=None):
+        if id is not None:
+            print(id)
+            obj=Seller_detail.objects.get(id=id)
+            s=SellerSerializer(obj,data=request.data)
+            if s.is_valid():
+                s.save()
+                msg={'msg':'data updated'}
+                return Response(msg)
+        else:
+            id=request.data['id']
+            obj=Seller_detail.objects.get(id=id)
+            s=SellerSerializer(obj,data=request.data)
+            if s.is_valid():
+                s.save()
+                msg={'msg':'data updated'}
+                return Response(msg)
+        return Response(s.error_messages)    
+
+    def patch(self,request,id=None,format=None):
+        if id is not None:
+            print(id)
+            obj=Seller_detail.objects.get(id=id)
+            s=SellerSerializer(obj,data=request.data)
+            if s.is_valid():
+                s.save()
+                msg={'msg':'data updated'}
+                return Response(msg)
+        else:        
+            id=request.data['id']
+            obj=Seller_detail.objects.get(id=id)
+            s=SellerSerializer(obj,data=request.data,partial=True)
+            if s.is_valid():
+                s.save()
+                msg={'msg':'data updated'}
+                return Response(msg)
+            return Response(s.error_messages)    
+    
+    def delete(self,request,id):
+        obj=Seller_detail.objects.get(id=id)
+        print(obj)
+        obj.delete()
+        msg={'msg':'data delete'}
+        return Response(msg)
+        
+
 class generate_licence(APIView):
     serializer_class = LicencePostSerializer
     def get(self, request):
