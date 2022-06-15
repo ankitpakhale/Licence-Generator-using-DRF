@@ -137,17 +137,20 @@ class exportcsv(APIView):
     serializer_class = ExportSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid():            
             s_data = Seller_detail.objects.get(id= request.data['seller_email'])
-            seller = Li_Model.objects.filter(seller_email= s_data)
+            l_seller = Li_Model.objects.filter(seller_email= s_data)            
             response = HttpResponse()
-            response['Content-Disposition'] = 'attachment; filename=final.csv'
+            response['Content-Disposition'] = f'attachment; filename={s_data}.csv'
             writer = csv.writer(response)
-            writer.writerow(['Seller Name', 'Licence No'])
-            studs = seller.values_list('seller_email', 'licence_no')
-            for std in studs:
-                writer.writerow(std)
+            writer.writerow(['User Email', 'Licence No'])            
+            l_studs = l_seller.values_list('licence_no')
+            for std in l_studs:
+                l=[]
+                l.append(s_data.email)
+                l.append(std[0])
+                writer.writerow(l)
             return response
-            # return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
