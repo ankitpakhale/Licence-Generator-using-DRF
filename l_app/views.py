@@ -139,16 +139,17 @@ class exportcsv(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():            
             s_data = Seller_detail.objects.get(id= request.data['seller_email'])
-            l_seller = Li_Model.objects.filter(seller_email= s_data)            
+            l_seller = Li_Model.objects.filter(seller_email= s_data)                        
             response = HttpResponse()
             response['Content-Disposition'] = f'attachment; filename={s_data}.csv'
             writer = csv.writer(response)
-            writer.writerow(['User Email', 'Licence No'])            
-            l_studs = l_seller.values_list('licence_no')
+            writer.writerow(['User Email', 'Licence No', 'Used'])            
+            l_studs = l_seller.values_list('licence_no', 'is_used')
             for std in l_studs:
                 l=[]
                 l.append(s_data.email)
                 l.append(std[0])
+                l.append(std[1])
                 writer.writerow(l)
             return response
         else:
