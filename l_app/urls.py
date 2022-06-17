@@ -1,10 +1,8 @@
 from django.urls import path
-from.views import exportcsv
-from . import views
+from .views import *
 
 urlpatterns = [
-    path('create_seller/', views.create_seller.as_view(), name='create_seller'),
-    path('all/', views.All_create_seller.as_view(), name='All_create_seller'),
-    path('', views.generate_licence.as_view(), name='generate_licence'),
-    path('export/', views.exportcsv.as_view(), name='exportcsv'),
+    path('create_seller/', create_seller, name='create_seller'),
+    path('', generate_licence, name='generate_licence'),
+    path('export/', exportcsv, name='exportcsv'),
 ]

@@ -4,6 +4,7 @@ from django_cryptography.fields import encrypt
 class Seller_detail(models.Model):
     email = models.EmailField(max_length=1000)
     name = models.CharField(max_length=1000)
+    age = models.IntegerField(default=None, null=True)
     def __str__(self):
         return self.email
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+<body>
+    <form method="POST" action="{% url 'create_seller' %}">
+        <h2>Create Seller</h2>
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Name">
+        <input type="email" name="email" placeholder="Email">
+        <input type="number" name="age" placeholder="Age">
+        <input type="submit" value="Submit">
+    </form>
+    <form method="POST">
+        <h2>Generate License</h2>
+        {% csrf_token %}
+        <input type="email" name="seller_email" placeholder="Seller Email">
+        <input type="license" name="license_nos" placeholder="No of License">
+        <input type="submit" value="Submit">
+    </form>
+
+    
+    {% for i in all_li %}
+    <p>{{i}}</p>
+    {% endfor %}
+    
+    {% for i in all_age %}
+    <p>{{i}}</p>
+    {% endfor %}
+
+</body>
+
+</html>
