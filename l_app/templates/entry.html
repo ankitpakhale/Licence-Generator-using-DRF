@@ -31,13 +31,10 @@
     </form>
 
     
-    {% for i in all_li %}
-    <p>{{i}}</p>
+    {% for i, j in all_li_email.items %}
+    <p>{{i}}    |   {{j}}</p>
     {% endfor %}
     
-    {% for i in all_age %}
-    <p>{{i}}</p>
-    {% endfor %}
 
 </body>
 

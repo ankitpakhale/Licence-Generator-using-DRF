@@ -23,12 +23,23 @@ def create_seller(request):
 def generate_licence(request):
     res = ''
     all_sellers = Seller_detail.objects.all()
-    
 
-    lic_sellers = []
+    lic_sellers_email = []
+    lic_sellers_no = []
     l_details = Li_Model.objects.all()
-    # for i in l_details:
-    #     lic_sellers.append(decrypt(i.email))
+    for i in l_details:
+        lic_sellers_no.append(decrypt(i.licence_no))
+        lic_sellers_email.append(i.seller_email)
+
+    all_li_email = {}
+    # for key in lic_sellers_email:
+    #     for value in lic_sellers_no:
+    #         all_li_email[key] = value
+    #         lic_sellers_no.remove(value)
+    #         break
+
+    all_li_email = {lic_sellers_email[i]: lic_sellers_no[i] for i in range(len(lic_sellers_email))}
+    print(all_li_email)
 
     if request.POST:
         email = request.POST['seller_email']
@@ -39,10 +50,10 @@ def generate_licence(request):
         for i in range(entry):
             N = 12
             res = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = N)))
-            Li_Model.objects.create(seller_email= encrypt(s_email), licence_no= encrypt(res))
+            Li_Model.objects.create(seller_email= s_email, licence_no= encrypt(res))
     context = {
         'all_sellers': all_sellers,
-        # 'lic_sellers':lic_sellers
+        'all_li_email':all_li_email
     }
     return render(request, 'entry.html', context=context)
 
