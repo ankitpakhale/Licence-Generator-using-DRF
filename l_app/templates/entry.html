@@ -19,7 +19,13 @@
     <form method="POST">
         <h2>Generate License</h2>
         {% csrf_token %}
-        <input type="email" name="seller_email" placeholder="Seller Email">
+
+        <select name="seller_email">
+            {% for i in all_sellers %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+
         <input type="license" name="license_nos" placeholder="No of License">
         <input type="submit" value="Submit">
     </form>
