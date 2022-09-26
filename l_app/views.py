@@ -22,8 +22,8 @@ def create_seller(request):
 
 def generate_licence(request):
     res = ''
+    msg = ''
     all_sellers = Seller_detail.objects.all()
-
     lic_sellers_email = []
     lic_sellers_no = []
     l_details = Li_Model.objects.all()
@@ -31,29 +31,40 @@ def generate_licence(request):
         lic_sellers_no.append(decrypt(i.licence_no))
         lic_sellers_email.append(i.seller_email)
 
+    print(lic_sellers_no)
+    print(lic_sellers_email)
+
     all_li_email = {}
     # for key in lic_sellers_email:
     #     for value in lic_sellers_no:
     #         all_li_email[key] = value
     #         lic_sellers_no.remove(value)
     #         break
-
+    
     all_li_email = {lic_sellers_email[i]: lic_sellers_no[i] for i in range(len(lic_sellers_email))}
-    print(all_li_email)
-
+    # print(len(all_li_email))
+    # print(all_li_email)
+    
     if request.POST:
         email = request.POST['seller_email']
         entry = int(request.POST.get('license_nos', False))    
-        print(email)
-        s_email = Seller_detail.objects.get(email = email)
-        print(s_email)
-        for i in range(entry):
-            N = 12
-            res = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = N)))
-            Li_Model.objects.create(seller_email= s_email, licence_no= encrypt(res))
+        try:
+            s_email = Seller_detail.objects.get(email = email)
+            c = 1
+            for i in range(entry):
+                N = 12
+                res = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = N)))
+                Li_Model.objects.create(seller_email= s_email, licence_no= encrypt(res))
+                print(c, 'This is count')
+                c += 1
+        except Exception as e:
+            msg = f'{email} does not exist'
+            print(e)
+            
     context = {
         'all_sellers': all_sellers,
-        'all_li_email':all_li_email
+        'all_li_email':all_li_email,
+        'msg':msg,
     }
     return render(request, 'entry.html', context=context)
 
