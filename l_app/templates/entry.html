@@ -29,8 +29,8 @@
     </form>
     
     <p> User | License no</p>
-    {% for i, j in all_li_email.items %}
-    <p>{{i}} | {{j}}</p>
+    {% for i in all_li_email %}
+    <p>{{i.lic_no}}|{{i.user_email}}</p>
     {% endfor %}
 
 </body>
